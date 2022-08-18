@@ -1,0 +1,20 @@
+body {
+  background-color: rgb(255, 127, 170);
+  font-size: medium;
+  font-style: italic;
+  align-content: center;
+}
+
+.container {
+    display: block;
+    background-color: chocolate;
+    font-size: medium;
+}
+
+.form-group{
+  display: block;
+  background-color: darksalmon;
+  align-items: center;
+  font-style: italic;
+}
+

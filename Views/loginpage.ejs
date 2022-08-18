@@ -1,0 +1,40 @@
+<style>
+body{
+  display: block;
+  font-size: medium;
+  color:black;
+  text-align: center;
+  background-color:darksalmon;
+  font-style:normal;  
+  border-color: aqua;
+}
+
+</style>
+
+<form action="/users/login" method = "POST">
+    <div class = "form-group">
+        <label for="email">Email</label>
+        <input 
+          type="email"
+          id="email"
+          name="email"
+          class="form-control"
+          placeholder="Email Address"
+        />
+    </div>
+    <br>
+    <div class = "form-group">
+      <label for="password">Password</label>
+      <input 
+        type="password"
+        id="password"
+        name="password"
+        class="form-control"
+        placeholder="Password"
+      />
+      
+  </div>
+    <br>
+    <button type ="submit" class="submit-buttin">Submit</button>
+</form>
+<p class="">

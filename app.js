@@ -4,7 +4,11 @@ const express_layout = require('express-ejs-layouts')
 
 const app = express()
 
-// the middleware 
+// static files
+// app.use(express.static('public'))
+app.use('/css', express.static(__dirname + 'public/css'))
+
+// the middleware
 app.use(express_layout)
 app.set('view engine', 'ejs')
 
