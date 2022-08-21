@@ -1,3 +1,4 @@
+<%- include( './partials/warning.ejs' ); %>
 <form action="/users/Register" method ="POST">
     <div class="form-group">
         <label for = "name">Name</label>
@@ -12,5 +13,27 @@
          value="<%= typeof email != 'undefined' ? email: '' %>"
         />
     </div>
+    <br>
+    <div class="form-group">
+        <label for = "password">Password</label>
+        <input type = "password" name = "password" class="form-control" id="password" placeholder="Password"
+         value="<%= typeof email != 'undefined' ? password: '' %>"
+        />
+    </div>
+    <br>
+    <div class="form-group">
+        <label for = "Confirm password">Confirm Password</label>
+        <input type = "password" name = "ConfirmPassword" class="form-control" id="ConfirmPassword" placeholder="Confirm Password"
+         value="<%= typeof email != 'undefined' ? ConfirmPassword: '' %>"
+        />
+    </div>
+    <br>
+   <button type = "submit" class="submit-button">Submit</button>
 
 </form>
+
+<style>
+    body {background-color: salmon; text-align: center; }
+</style>
+
+
