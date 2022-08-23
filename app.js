@@ -9,12 +9,14 @@ const app = express()
 const database = require('./configurations/mongo').MongoURI
 
 // establish a connection with the database
+
 mongoose.connect(database, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log('---------------------------Connection established with MongoDB-----------'))
   .catch(err => console.log(err))
 
   .then(() => console.log('---------------------------Connection established with MongoDB-----------'))
   .catch(err => console.log(err))
+
 
 // to access the css files..
 // app.use(express.static('public'))
@@ -31,6 +33,6 @@ app.use(express.urlencoded({ extended: false }))
 app.use('/', require('./Routes/index'))
 app.use('/users', require('./Routes/users'))
 
-const PORT = process.env.PORT || 10000
+const PORT = process.env.PORT || 5000
 
 app.listen(PORT, console.log('server running...'))

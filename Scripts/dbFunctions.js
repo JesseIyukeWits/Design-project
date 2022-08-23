@@ -55,7 +55,7 @@ async function timeStamp(){
 
   async function longitude(){
     try{
-        let response = await require("./response.json") // returns as json object(key-value pair)
+        let response = await require("./response.json") // returns as json object(key-value pair)np
         let longitudeArr=[]
         longitudeArr= response.result.map((user) => user["position.longitude"]) // convert to an array
        // console.log(longitudeArr)

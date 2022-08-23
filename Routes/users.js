@@ -1,6 +1,10 @@
 const express_ = require('express')
 const router = express_.Router()
-const user = require('../models/user.js')
+const User_ = require('../models/user.js')
+
+
+// for the encryption process
+const encrypt = require('bcryptjs')
 
 // login page for user - when user requests login page
 router.get('/login', (req, res) => res.render('loginpage'))
@@ -16,7 +20,7 @@ router.post('/Register', (req, res) => {
 
   // if the password and the confirmation password matches.
   if (password !== ConfirmPassword) {
-    errors_.push({ message_: 'Passwords do not match'})
+    errors_.push({ message_: 'Passwords do not match' })
   }
 
   // Ensure that all the details have been filled out.
@@ -29,19 +33,23 @@ router.post('/Register', (req, res) => {
     errors_.push({ message_: 'Password must be greater than 8 characters' })
   }
 
+  // if any errors exist then send the errors and call the register page again.
   if (errors_.length > 0) {
     res.render('registerpage', {
-      errors_,
-      name,
-      email,
-      password,
-      ConfirmPassword
+      errors_, name, email, password, ConfirmPassword
     })
   } else {
-    res.send('USER has logged in....')
+    // create the new user by passing in the information to the model.
+    const UserInfo = new User_({
+      email, name, password, ConfirmPassword
+    })
+
+    UserInfo.save()
+      .then(user => {
+        res.redirect('/login')
+        console.log('DONDDDDDDD--------')
+      })
+      .catch(err => console.log(err))
   }
 })
-
-// handle the information recived from the register page
-
 module.exports = router
