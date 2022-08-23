@@ -1,10 +1,13 @@
 const express = require('express')
 const express_layout = require('express-ejs-layouts')
 const mongoose = require('mongoose')
+const { session } = require('passport')
 const path = require('path')
-
+const session_ = require('express-session')
 const app = express()
+const passport = require('passport')
 
+require('./configurations/VerifyLoginDetails')(passport)
 // configure the database.
 const database = require('./configurations/mongo').MongoURI
 
@@ -17,7 +20,6 @@ mongoose.connect(database, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log('---------------------------Connection established with MongoDB-----------'))
   .catch(err => console.log(err))
 
-
 // to access the css files..
 // app.use(express.static('public'))
 app.use('/css', express.static(__dirname + 'public/css'))
@@ -28,6 +30,13 @@ app.set('view engine', 'ejs')
 
 // Body parser for the forms
 app.use(express.urlencoded({ extended: false }))
+
+// Setup express session:
+app.use(session_({
+  secret: 'secret',
+  resave: true,
+  saveUninitialized: true
+}))
 
 // setting up the routes
 app.use('/', require('./Routes/index'))

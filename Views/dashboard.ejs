@@ -1,0 +1,19 @@
+
+<form action="/users/login/dashboard" method ="POST">
+    <div class="form-group">
+        <label for = "sensor">Sensor</label>
+        <input type="sensor" name="sensor" class="form-control" id="sensor" placeholder="Sensor"
+         value="<%= typeof sensor != 'undefined' ? sensor: '' %>"
+        />
+    </div>
+    <br>
+    
+   <button type = "submit" class="submit-button">Submit</button>
+
+</form>
+
+<style>
+    body {background-color: salmon; text-align: center; }
+</style>
+
+

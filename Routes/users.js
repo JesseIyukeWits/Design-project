@@ -1,16 +1,20 @@
 const express_ = require('express')
 const router = express_.Router()
 const User_ = require('../models/user.js')
+const passport = require('passport')
 
 
 // for the encryption process
 const encrypt = require('bcryptjs')
+const user = require('../models/user.js')
 
 // login page for user - when user requests login page
 router.get('/login', (req, res) => res.render('loginpage'))
 
 // when user requests for /register then send the register page
 router.get('/Register', (req, res) => res.render('registerpage'))
+
+router.get('/Dashboard', (req, res) => res.render('dashboard'))
 
 // handle the information recieved from the login page
 router.post('/Register', (req, res) => {
@@ -52,4 +56,13 @@ router.post('/Register', (req, res) => {
       .catch(err => console.log(err))
   }
 })
+
+// handling the login page.
+router.post('/login', (req, res, next) => {
+  passport.authenticate('local', {
+    successRedirect: '/users/dashboard',
+    failureRedirect: '/users/login'
+  })(req, res, next)
+})
+
 module.exports = router
