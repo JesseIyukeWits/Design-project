@@ -1,0 +1,37 @@
+<%- include( './partials/warning.ejs' ); %>
+<h1>Log Your Device details</h1>
+<h2>Please register your details below</h2>
+<form action="/menu/log" method ="POST">
+
+    <div class="form-group">
+        <label for = "sensor">Sensor Name</label>
+        <input type="sensor" name="sensor" class="form-control" id="sensor" placeholder="Sensor Name"
+        />
+    </div>
+    <br>
+    <div class="form-group">
+        <label for = "Vehicle">Vehicle Model</label>
+        <input type = "Vehicle" name = "Vehicle" class="form-control" id="Vehicle" placeholder="Vehicle Model"
+        />
+    </div>
+    <br>
+    <div class="form-group">
+        <label for = "Year"> Year Model </label>
+        <input type = "Year" name = "Year" class="form-control" id="Year" placeholder="Year"
+        />
+    </div>
+    <br>
+    <div class="form-group">
+        <label for = "ChannelId">Channel Id</label>
+        <input type = "ChannelId" name = "ChannelId" class="form-control" id="ChannelId" placeholder="Sensor Channel Id"
+        />
+    </div>
+    <br>
+   <button type = "submit" class="submit-button">Submit</button>
+
+</form>
+
+<style>
+    body {background-color: lightblue; text-align: center; }
+</style>
+

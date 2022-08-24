@@ -1,18 +1,13 @@
 
 <h1>Welcome to the dashboard</h1>
-<h2>You can now log your sensor details</h2>
-<form action="/users/login/dashboard" method ="POST">
-    <div class="form-group">
-        <label for = "sensor">Sensor</label>
-        <input type="sensor" name="sensor" class="form-control" id="sensor" placeholder="Sensor"
-         value="<%= typeof sensor != 'undefined' ? sensor: '' %>"
-        />
-    </div>
-    <br>
-    
-   <button type = "submit" class="submit-button">Submit</button>
+<h2>The dashboard allows you to view energy consumption or log a device</h2>
 
-</form>
+   <a href="/menu/view" class="btn btn-primary btn-block mb-2"
+              >View energy consumption</a>
+    <br><br>
+    <a href="/menu/log" class="btn btn-primary btn-block mb-2"
+              >Log a device</a>   
+
 
 <style>
     body {background-color: lightgreen ; text-align: center; }

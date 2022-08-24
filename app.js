@@ -41,6 +41,7 @@ app.use(session_({
 // setting up the routes
 app.use('/', require('./Routes/index'))
 app.use('/users', require('./Routes/users'))
+app.use('/menu', require('./Routes/menu'))
 
 const PORT = process.env.PORT || 5000
 

@@ -6,17 +6,17 @@ const UserModel = require('../models/user')
 
 module.exports = function (passport) {
   passport.use(
-    new Localstrategy({ usernameField: 'email' }, (email, password, done) => {
+    new Localstrategy({ usernameField: 'email', passwordField: 'password' }, async (email, password, done) => {
       // check if the email address exists in the database
-      UserModel.findOne({ email: email })
+      UserModel.findOne({ email: email, password: password })
         .then(user => {
           if (!user) {
             return done(null, false, { message: 'Invalid email' })
           }
-
+          /*
           if (!user.password) {
             return done(null, false, { message: 'Incorrect password' })
-          }
+          } */
           return done(null, user)
         })
         .catch(err => console.log(err))
