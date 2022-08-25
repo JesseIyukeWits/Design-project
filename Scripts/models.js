@@ -10,13 +10,13 @@ async function KM() {
     let mass = 3900, cd = 0.36, crr = 0.02, A = 4.0, eff = 0.90, rgbeff = 0.65, p0=100
 
     //physics parameters
-    let displacement=[],slope=[],dt=[],dv=[], diffElevation=[], velocity=[]
+    let displacement=[],slope=[],dt=[],dv=[], diffElevation=[], velocity=[], date= []
 
     //force parameters
     let force=0, frr=0, fad=0, fsd = 0, grav = 9.81, rho = 1.184
 
     //Energy consumption parameters
-    let ErP=0, ErB=0, ErO=0, totalEnergy=[]
+    let ErP=0, ErB=0, ErO=0, energy=[], energyCosnumtpion=[]
 
     // Functions
     let rawTime= await database.timeStamp()
@@ -26,8 +26,6 @@ async function KM() {
     let rawLongitude = await database.longitude()
     let rawSpeed = await database.speed()
 
-    //unix to local time   
-    unixtoLocal(rawTime)
 
     //length of Array- should be the same for other arrays
     lenArr= rawTime.length-1
@@ -35,6 +33,9 @@ async function KM() {
 
    //  Set up array for energy consumption estimations
     for(let x=0; x<lenArr; x++){
+        
+        //unix to local time
+        date= unixtoLocal(rawTime)
 
         // Convert speed in km/h to m/s , look up max speeds for certain Vehicles
         velocity[x]=rawSpeed[x]/3.6
@@ -64,7 +65,7 @@ async function KM() {
         // Calculate lateral distance
         let trig = Math.sin(diffLat/2) * Math.sin(diffLat/2) + Math.sin(diffLon/2) * Math.sin(diffLon/2) * Math.cos(lat1) * Math.cos(lat2)
         let c = 2 * Math.atan2(Math.sqrt(trig), Math.sqrt(1-trig))
-        let latD = (R * c)*1000
+        let latD = (R * c)*1000// (m)
 
         //3D Distance using pythogoras to account for elevation change
         let dist3d = Math.sqrt(((latD)**2) + ((diffElevation[x])**2))
@@ -120,13 +121,17 @@ async function KM() {
                 ErB= propultion_work*rgbeff // Recuperated Energy (from regen braking system)
             }
 
-            totalEnergy[x] = (ErO + ErP+ErB)/(3.6 * 10**6)
+            energy[x] = (((ErO + ErP+ErB)/(3.6 * 10**6))) //in kwh
+            energyCosnumtpion[x]= energy[x]/(displacement[x]*1000) // // in kwh/km
 
     }
     //Total enegry for a trip
-    totalEnergySum = totalEnergy.reduce((partialSum, a) => partialSum + a, 0)
-    //console.log(totalEnergySum)
-    return totalEnergySum
+    let totalEnergy = energy.reduce((partialSum, a) => partialSum + a, 0) //in kwh
+    let totaldis=displacement.reduce((partialSumd, d) => partialSumd + d, 0) //in m
+    let totalEnergyConsumption=totalEnergy/(totaldis)*1000 // in kwh/km
+  
+    console.log(totalEnergyConsumption)
+    //return totalEnergyConsumption
     
 }
 
@@ -167,5 +172,6 @@ function getAerodynamicDrag(c_d, A, vel, rho){
 function getRoadSlopeDrag(mass, slope, grav){
     return -mass * grav * Math.sin(slope)
 }
+
 
 KM()
