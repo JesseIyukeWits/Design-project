@@ -20,6 +20,7 @@ mongoose.connect(database, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log('---------------------------Connection established with MongoDB-----------'))
   .catch(err => console.log(err))
 
+app.use('/Authorised', require('./Routes/Authorised'))
 // to access the css files..
 // app.use(express.static('public'))
 app.use('/css', express.static(__dirname + 'public/css'))

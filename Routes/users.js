@@ -3,10 +3,11 @@ const router = express_.Router()
 const User_ = require('../models/user.js')
 const passport = require('passport')
 
-
 // for the encryption process
-const encrypt = require('bcryptjs')
-const user = require('../models/user.js')
+// const encrypt = require('bcryptjs')
+
+// setting a variable for a user login
+
 
 // login page for user - when user requests login page
 router.get('/login', (req, res) => res.render('loginpage'))
@@ -19,6 +20,7 @@ router.get('/Dashboard', (req, res) => res.render('dashboard'))
 // handle the information recieved from the login page
 router.post('/Register', (req, res) => {
   const { name, email, password, ConfirmPassword } = req.body
+
   // create an error to handle errors
   const errors_ = []
 
@@ -49,9 +51,9 @@ router.post('/Register', (req, res) => {
     })
 
     UserInfo.save()
-      .then(user => {
-        res.redirect('/login')
-        console.log('DONDDDDDDD--------')
+      .then(users => {
+        res.redirect('./login')
+        console.log('USER HAS BEEN REGISTERED')
       })
       .catch(err => console.log(err))
   }
@@ -64,5 +66,6 @@ router.post('/login', (req, res, next) => {
     failureRedirect: '/users/login'
   })(req, res, next)
 })
+
 
 module.exports = router

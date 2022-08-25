@@ -2,7 +2,7 @@
 const mongoose = require('mongoose')
 
 const DeviceSchema = new mongoose.Schema({
-
+  username: { type: String, required: true },
   sensor: { type: String, required: true },
   VehicleModel: { type: String, required: true },
   ModelYear: { type: String, required: true },
