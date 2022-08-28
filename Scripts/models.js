@@ -1,5 +1,5 @@
 const moment = require("moment") //install moment libary to get local time
-const database = require('./dbFunctions')
+const database = require('./modelFunctions')
 
 // Energy consumption from kinetic enegry model
 
@@ -10,53 +10,61 @@ async function KM() {
     let mass = 3900, cd = 0.36, crr = 0.02, A = 4.0, eff = 0.90, rgbeff = 0.65, p0=100
 
     //physics parameters
-    let displacement=[],slope=[],dt=[],dv=[], diffElevation=[], velocity=[], date= []
+    let displacement=[],slope=[],dt=[],dv=[], diffElevation=[], velocity=[], date= [], dist3d=[]
 
     //force parameters
-    let force=0, frr=0, fad=0, fsd = 0, grav = 9.81, rho = 1.184
+    let force=[], frr=[], fad=[], fsd =[], grav = 9.81, rho = 1.184
 
     //Energy consumption parameters
-    let ErP=0, ErB=0, ErO=0, energy=[], energyCosnumtpion=[]
+    let ErP=[], ErB=[], ErO=[], energy=[], energyCosnumtpion=[], prop_brake_force=[],kinetic_power=[],propultion_work=[]
+    let exp_speed_delta=[], unexp_speed_delta=[]
 
     // Functions
     let rawTime= await database.timeStamp()
-    let rawMAF = await database.MAF()
     let rawAltitude = await database.altitude()
     let rawLatitude = await database.latitude()
     let rawLongitude = await database.longitude()
     let rawSpeed = await database.speed()
+    let ID= await database.ID()
+
+    // Convert speed in km/h to m/s , look up max speeds for certain Vehicles
+    velocity= rawVelocity(rawSpeed)
+    
+
+    //channel ID from flespi
+    let channelID= ID[0]
 
 
     //length of Array- should be the same for other arrays
-    lenArr= rawTime.length-1
+    lenArr= rawAltitude.length-1
     //console.log(lenArr)
 
    //  Set up array for energy consumption estimations
     for(let x=0; x<lenArr; x++){
         
         //unix to local time
-        date= unixtoLocal(rawTime)
+        date[x]= unixtoLocal(rawTime)
 
-        // Convert speed in km/h to m/s , look up max speeds for certain Vehicles
-        velocity[x]=rawSpeed[x]/3.6
+        // Calculate time between samples
+        dt.push(rawTime[x+1]-rawTime[x])
+        if(dt[x]==0)
+        {
+            dt[x]=1
+        }
         
         // Change in velocity between each timestep
-        dv[x]= (rawSpeed[x+1]-(rawSpeed[x]))/3.6
+        dv[x]= (velocity[x+1]-(velocity[x]))
  
         // Calculate elevation change
         
-        diffElevation.push(Math.abs(rawAltitude[x+1]-rawAltitude[x])) 
-        if(diffElevation[x] <=0.2)
+        diffElevation.push(rawAltitude[x+1]-rawAltitude[x]) 
+        if((Math.abs(diffElevation[x]) <0.2))
         {
             diffElevation[x]=0
         }
- 
-        // Calculate time between samples
-        dt.push(rawTime[x+1]-rawTime[x])
-
         //Coordinates
         // Lateral distance between two lat/lon coord pairs  (in m)
-        let R = 6371; // radius of earth in km
+        let R = 6371 //radius of earth in km
         let diffLat = toRad(rawLatitude[x+1]-rawLatitude[x])
         let diffLon = toRad(rawLongitude[x+1]-rawLongitude[x])
         let lat1= toRad(rawLatitude[x])
@@ -65,73 +73,92 @@ async function KM() {
         // Calculate lateral distance
         let trig = Math.sin(diffLat/2) * Math.sin(diffLat/2) + Math.sin(diffLon/2) * Math.sin(diffLon/2) * Math.cos(lat1) * Math.cos(lat2)
         let c = 2 * Math.atan2(Math.sqrt(trig), Math.sqrt(1-trig))
-        let latD = (R * c)*1000// (m)
+        let latD = (R * c)*1000 // (m)
 
         //3D Distance using pythogoras to account for elevation change
-        let dist3d = Math.sqrt(((latD)**2) + ((diffElevation[x])**2))
+        dist3d[x] = Math.sqrt(((latD)**2) + ((diffElevation[x])**2))
 
         if (x==0){
             displacement[x]=0
         }
         else{
-            displacement[x]=dist3d
+            displacement[x]=dist3d[x]
         }
         if (displacement[x]!==0 && diffElevation[x]!==0){
-            slope[x]= Math.asin((diffElevation[x])/dist3d)
+            slope[x]= Math.asin((diffElevation[x])/dist3d[x])
         }
         else{
             slope[x]=0
-        }
+        } 
+        // always initilise external forces
+        frr[x]=0
+        fad[x]=0
+        fsd[x]=0
+        force[x]=0 
 
         //External forces
         if (velocity[x] != 0){ // No drag if velocity = 0
-            frr = getRollingResistance(mass,crr, slope, velocity[x],grav) // (N)
-            fad = getAerodynamicDrag(cd, A, velocity[x],rho) // (N)
-            fsd = getRoadSlopeDrag(mass, slope,grav) // (N)
+            frr [x]= getRollingResistance(mass,crr, slope[x], velocity[x],grav) // (N)
+            fad[x] = getAerodynamicDrag(cd, A, velocity[x],rho) // (N)
+            fsd[x] = getRoadSlopeDrag(mass, slope[x],grav) // (N)
 
-        }  
-            force = frr + fad + fsd // (N)
+        }
+ 
+        force[x] = frr[x] + fad[x] + fsd[x] // (N)
             
-            exp_speed_delta = force * dt[x] / mass// (N-s/kg)
+        exp_speed_delta[x] = force[x] * (dt[x] / mass)// (N-s/kg)
             
-            unexp_speed_delta = dv[x]- exp_speed_delta // (m/s)
+        unexp_speed_delta[x] = dv[x]- exp_speed_delta[x] // (m/s)
 
-            try{
-                prop_brake_force = mass * unexp_speed_delta / dt[x] // (kg * m/s)/(s) = (N)
+        try{
+            prop_brake_force[x] = mass * unexp_speed_delta[x] / dt[x] // (kg * m/s)/(s) = (N)
             
-                kinetic_power = prop_brake_force * velocity[x] // (N)*(m/s) = (W)
+            kinetic_power[x] = prop_brake_force[x] * velocity[x] // (N)*(m/s) = (W)
                 
-                propultion_work = kinetic_power * dt[x]  // (W)*(s) = (J) 
-
+             propultion_work[x] = kinetic_power[x] * dt[x]  // (W)*(s) = (J) 
             }
                   
-            catch(e){
-                prop_brake_force = 0
-                kinetic_power = 0
-                propultion_work = 0
-            }
+        catch(e){
+                prop_brake_force[x] = 0
+                kinetic_power[x] = 0
+                propultion_work[x] = 0
+            } 
 
             // Compute energy expenditure
-            ErO= p0* dt[x] //Offload Work (J)
+            ErO[x]= p0* dt[x] //Offload Work (J)
             
-            if(propultion_work>0){
-                ErP= propultion_work/eff //Propulsion Energy 
+            if(propultion_work[x]>0){
+                ErP[x]= propultion_work[x]/eff //Propulsion Energy
+                ErB[x]=0
+                 
             }
-            else if(propultion_work<0){
-                ErB= propultion_work*rgbeff // Recuperated Energy (from regen braking system)
+            else if(propultion_work[x]<0){
+                ErB[x]= propultion_work[x]*rgbeff // Recuperated Energy (from regen braking system)
+                ErP[x]=0
             }
+             else if(propultion_work[x] == 0 || propultion_work[x] == undefined  || propultion_work[x] == Infinity || propultion_work[x] == NaN){
+                ErP[x]=0
+                ErB[x]=0
+            }  
 
-            energy[x] = (((ErO + ErP+ErB)/(3.6 * 10**6))) //in kwh
-            energyCosnumtpion[x]= energy[x]/(displacement[x]*1000) // // in kwh/km
+            energy[x] = (((ErO[x] + ErP[x]+ErB[x])/(3.6 * 10**6))) //in kwh
+            energyCosnumtpion[x]= energy[x]/(displacement[x]/1000) // // in kwh/km
+
+            //console.log(dt[x])
+
+
 
     }
     //Total enegry for a trip
     let totalEnergy = energy.reduce((partialSum, a) => partialSum + a, 0) //in kwh
     let totaldis=displacement.reduce((partialSumd, d) => partialSumd + d, 0) //in m
-    let totalEnergyConsumption=totalEnergy/(totaldis)*1000 // in kwh/km
+    let totalEnergyConsumption=(totalEnergy/((totaldis)/1000)) // in kwh/km
   
     console.log(totalEnergyConsumption)
-    //return totalEnergyConsumption
+
+    //arrays needed to be sent to database:
+    //rawspeed,displacement, energyCosnumption, date,channelID
+    return totalEnergyConsumption
     
 }
 
@@ -166,12 +193,29 @@ function getRollingResistance(mass,crr,slope, vel,grav) {
 
 //Aerodynamic Drag Force (N)
 function getAerodynamicDrag(c_d, A, vel, rho){
-    return -0.50 * rho * c_d * A * vel**2
+    return -0.50 * rho * c_d * A * (vel**2)
 }   
 //Road Slope Force (N)
 function getRoadSlopeDrag(mass, slope, grav){
     return -mass * grav * Math.sin(slope)
 }
 
+function rawVelocity(speed){
+
+    let velocityarr=[]
+    for(let x=0;x<=speed.length;x++){
+
+        if(speed[x]>=0.5){
+            velocityarr[x]= speed[x]/3.6
+        }
+        else{
+            velocityarr[x]=0
+        }
+    }
+    return velocityarr  
+
+}
+
 
 KM()
+
