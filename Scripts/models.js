@@ -1,6 +1,26 @@
 const moment = require("moment") //install moment libary to get local time
 const database = require('./modelFunctions')
 
+// database files:
+const express_ = require('express')
+const router = express_.Router()
+const VehicleSchema = require('../models/LogDevice')
+const energyScript = require('../Scripts/models.js')
+const mongoose = require('mongoose')
+const EnergyModel = require('../models/EnergyConsumption')
+
+const mongodatabase = require('../configurations/mongo').MongoURI
+
+// establish a connection with the database
+
+mongoose.connect(mongodatabase, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => console.log('---------------------------Connection established with MongoDB-----------'))
+  .catch(err => console.log(err))
+
+  .then(() => console.log('---------------------------Connection established with MongoDB-----------'))
+  .catch(err => console.log(err))
+
+
 // Energy consumption from kinetic enegry model
 
 async function KM() {
@@ -33,6 +53,7 @@ async function KM() {
 
     //channel ID from flespi
     let channelID= ID[0]
+    
 
 
     //length of Array- should be the same for other arrays
@@ -154,10 +175,29 @@ async function KM() {
     let totaldis=displacement.reduce((partialSumd, d) => partialSumd + d, 0) //in m
     let totalEnergyConsumption=(totalEnergy/((totaldis)/1000)) // in kwh/km
   
-    console.log(totalEnergyConsumption)
+    // console.log(totalEnergyConsumption)
+   
+  // arrays needed to be sent to database:
+  
+  VehicleSchema.findOne({ ChannelId: channelID })
+    .then(device => {
+      if (device) {
+        const EnergyInfo = new EnergyModel ({
+          disp: totaldis,
+          energyConsumption: totalEnergyConsumption,
+          ChannelId: channelID
+        })
 
-    //arrays needed to be sent to database:
+        EnergyInfo.save()
+          .then(console.log('-------Energy logged--------------'))
+          .catch(err => console.log(err))
+      }
+    })
+    .catch(err => console.log(err))
+
+
     //rawspeed,displacement, energyCosnumption, date,channelID
+  
     return totalEnergyConsumption
     
 }
@@ -218,4 +258,3 @@ function rawVelocity(speed){
 
 
 KM()
-

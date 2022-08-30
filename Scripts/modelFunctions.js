@@ -2,7 +2,7 @@
 
 
 //Model functions
-async function timeStamp(){
+async function timeStamp() {
     try{
         let response = await require("./response.json") // returns as json object(key-value pair)
         let timeArr=[]
@@ -26,7 +26,7 @@ async function timeStamp(){
   }
 
 
-  async function altitude(){
+  async function altitude() {
     try{
         let response = await require("./response.json") // returns as json object(key-value pair)
         let altitudeArr=[]
@@ -47,7 +47,7 @@ async function timeStamp(){
     }
   }
 
-  async function latitude(){
+  async function latitude() {
     try{
         let response = await require("./response.json") // returns as json object(key-value pair)
         let latitudeArr=[]
@@ -61,7 +61,7 @@ async function timeStamp(){
         //console.log(latitudeArr.length) 
         return latitudeArr
    
-    }catch(e){
+    }catch(e) {
         return -1
     }
   }
