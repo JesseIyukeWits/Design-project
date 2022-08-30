@@ -9,6 +9,7 @@ const EnergyConsumptionSchema = new mongoose.Schema({
   totaldisplacement: { type: String, required: true },
   travelstart: { type: String, required: true },
   travelend: { type: String, required: true },
+  averageSpeed: { type: String, required: true },
   Date: [{ type: String, required: true }]
 
 })

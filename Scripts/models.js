@@ -211,6 +211,7 @@ async function KM() {
           totaldisplacement: totaldis,
           travelstart: date[0],
           travelend: date[enddate - 1],
+          averageSpeed: aveSpeed,
           Date: date
         
         })
