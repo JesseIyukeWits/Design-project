@@ -43,13 +43,17 @@ on the display.ejs page.
 router.post('/view', (req, res) => {
   const { channelID } = req.body
   console.log(channelID)
-  const arr = []
+  // const arr = []
   VehicleSchema.findOne({ ChannelId: channelID })
     .then(device => {
       if (device) {
         // res.render('display', { EnergyConsumption: device.energyConsumption })
-        EnergyInfo.find(({ ChannelId: channelID }), function (err, val) {
-          res.send(val)
+        EnergyInfo.find({ ChannelId: channelID }, function (err, val) {
+          if (err) {
+            console.log(err)
+          } else {
+            res.render('display', { jjj: val })
+          }
         })
       } else {
         res.send('Channel ID is incorrect or does not exist')

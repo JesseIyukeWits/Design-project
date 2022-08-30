@@ -2,11 +2,11 @@
 const mongoose = require('mongoose')
 
 const EnergyConsumptionSchema = new mongoose.Schema({
-  // rawspeed: { type: String, required: true },
-  disp: { type: String, required: true },
+  rawspeed: [{ type: String, required: true }],
+  Displacement: { type: String, required: true },
   energyConsumption: { type: String, required: true },
-  ChannelId: { type: String, required: true }
-  // date: { type: String, required: true }
+  ChannelId: { type: String, required: true },
+  Date: [{ type: String, required: true }]
 
 })
 

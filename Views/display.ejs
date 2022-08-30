@@ -1,11 +1,19 @@
 <title>Energy Value </title>
 
-<body>
-<h4>The EnergyConsumption is <%= data.EnergyConsumption %> </h4>    
-<h4>The Displacement value is <%= data.Displacement %> </h4>   
 
-</body>
+<ul>
+    <% jjj.forEach(function(jj){ %>
+        <li>
+            <h3> Displacement values = <%= jj.Displacement %><h3>
+            <h3> Energy Consumption values = <%= jj.energyConsumption %><h3></h3>
+            <h3> Speed values = <%= jj.rawspeed %><h3></h3>
+
+        </li>
+        <% }); %>
+</ul>
 
 <style>
-    body{ background-color:antiquewhite;}
+    body {
+        background-color: antiquewhite;
+    }
 </style>

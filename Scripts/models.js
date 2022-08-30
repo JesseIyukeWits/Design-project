@@ -178,14 +178,16 @@ async function KM() {
     // console.log(totalEnergyConsumption)
    
   // arrays needed to be sent to database:
-  
+
   VehicleSchema.findOne({ ChannelId: channelID })
     .then(device => {
       if (device) {
         const EnergyInfo = new EnergyModel ({
-          disp: totaldis,
+          rawspeed: rawSpeed,
+          Displacement: totaldis,
           energyConsumption: totalEnergyConsumption,
           ChannelId: channelID
+          // Date: date
         })
 
         EnergyInfo.save()
@@ -196,10 +198,9 @@ async function KM() {
     .catch(err => console.log(err))
 
 
-    //rawspeed,displacement, energyCosnumption, date,channelID
+  // rawspeed,displacement, energyCosnumption, date,channelID
   
     return totalEnergyConsumption
-    
 }
 
 
