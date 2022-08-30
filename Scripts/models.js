@@ -27,7 +27,10 @@ async function KM() {
     
     //intilisation
     //physical vehicle parameters
-    let mass = 3900, cd = 0.36, crr = 0.02, A = 4.0, eff = 0.90, rgbeff = 0.65, p0=100
+    //let mass = 3900, cd = 0.36, crr = 0.02, A = 4.0, eff = 0.90, rgbeff = 0.65, p0=100
+
+    //Toyota Yaris physical vehicle parameters
+    let mass = 1016, cd = 0.36, crr = 0.02, A = 6.42, eff = 0.90, rgbeff = 0.65, p0=100
 
     //physics parameters
     let displacement=[],slope=[],dt=[],dv=[], diffElevation=[], velocity=[], date= [], dist3d=[]
@@ -37,7 +40,7 @@ async function KM() {
 
     //Energy consumption parameters
     let ErP=[], ErB=[], ErO=[], energy=[], energyCosnumtpion=[], prop_brake_force=[],kinetic_power=[],propultion_work=[]
-    let exp_speed_delta=[], unexp_speed_delta=[]
+    let exp_speed_delta=[], unexp_speed_delta=[], aveSpeed= []
 
     // Functions
     let rawTime= await database.timeStamp()
@@ -58,7 +61,10 @@ async function KM() {
 
     //length of Array- should be the same for other arrays
     lenArr= rawAltitude.length-1
-    //console.log(lenArr)
+    
+    //avergae speed
+    let totalSpeed = rawSpeed.reduce((partialSum, a) => partialSum + a, 0) 
+    aveSpeed= totalSpeed/rawSpeed.length
 
    //  Set up array for energy consumption estimations
     for(let x=0; x<lenArr; x++){
@@ -198,7 +204,7 @@ async function KM() {
     .catch(err => console.log(err))
 
 
-  // rawspeed,displacement, energyCosnumption, date,channelID
+  // rawspeed,displacement, energyCosnumption, date,channelID, aveSpeed
   
     return totalEnergyConsumption
 }

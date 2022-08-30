@@ -4,9 +4,9 @@
 //Model functions
 async function timeStamp() {
     try{
-        let response = await require("./response.json") // returns as json object(key-value pair)
+        let response1 = await require("./response1.json") // returns as json object(key-value pair)
         let timeArr=[]
-        timeArr= response.result.map((user) => user.timestamp) // convert to an array
+        timeArr= response1.result.map((user) => user.timestamp) // convert to an array
         //console.log(timeArr) 
 
          //remove index contaning undefined values
@@ -28,9 +28,9 @@ async function timeStamp() {
 
   async function altitude() {
     try{
-        let response = await require("./response.json") // returns as json object(key-value pair)
+        let response1 = await require("./response1.json") // returns as json object(key-value pair)
         let altitudeArr=[]
-        altitudeArr= response.result.map((user) => user["position.altitude"]) // convert to an array
+        altitudeArr= response1.result.map((user) => user["position.altitude"]) // convert to an array
 
         //remove index contaning undefined values
         let arr= checkKeys()
@@ -49,9 +49,9 @@ async function timeStamp() {
 
   async function latitude() {
     try{
-        let response = await require("./response.json") // returns as json object(key-value pair)
+        let response1 = await require("./response1.json") // returns as json object(key-value pair)
         let latitudeArr=[]
-        latitudeArr= response.result.map((user) => user["position.latitude"]) // convert to an array
+        latitudeArr= response1.result.map((user) => user["position.latitude"]) // convert to an array
 
         let arr= checkKeys()
         for(let y=0;y<arr.length;y++)
@@ -68,9 +68,9 @@ async function timeStamp() {
 
   async function longitude(){
     try{
-        let response = await require("./response.json") // returns as json object(key-value pair)np
+        let response1 = await require("./response1.json") // returns as json object(key-value pair)np
         let longitudeArr=[]
-        longitudeArr= response.result.map((user) => user["position.longitude"]) // convert to an array
+        longitudeArr= response1.result.map((user) => user["position.longitude"]) // convert to an array
 
         //remove index contaning undefined values
         let arr= checkKeys()
@@ -89,9 +89,9 @@ async function timeStamp() {
 
   async function speed(){
     try{
-        let response = await require("./response.json") // returns as json object(key-value pair)
+        let response1 = await require("./response1.json") // returns as json object(key-value pair)
         let speedArr=[]
-        speedArr= response.result.map((user) => user["position.speed"]) // convert to an array
+        speedArr= response1.result.map((user) => user["position.speed"]) // convert to an array
 
         //remove index contaning undefined values
         let arr= checkKeys()
@@ -109,9 +109,9 @@ async function timeStamp() {
 
   async function ID(){
     try{
-        let response = await require("./response.json") // returns as json object(key-value pair)np
+        let response1 = await require("./response1.json") // returns as json object(key-value pair)np
         let IDArr=[]
-        IDArr= response.result.map((user) => user["channel.id"]) // convert to an array
+        IDArr= response1.result.map((user) => user["channel.id"]) // convert to an array
        // console.log(IDArr)
         return IDArr
    
@@ -125,11 +125,11 @@ async function timeStamp() {
 function checkKeys(){
 
     let arr= []
-        let response = require("./response.json") // returns as json object(key-value pair)
-        //console.log(response.result.length)
-        for(let x=0; x<response.result.length-1; x++){
-            if(response.result[x]["position.latitude"]== undefined || response.result[x]["position.longitude"]== undefined || (response.result[x]["timestamp"]===response.result[x+1]["timestamp"])) {
-                // || (response.result[x]["timestamp"]==response.result[x+1]["timestamp"])
+        let response1 = require("./response1.json") // returns as json object(key-value pair)
+        //console.log(response1.result.length)
+        for(let x=0; x<response1.result.length-1; x++){
+            if(response1.result[x]["position.latitude"]== undefined || response1.result[x]["position.longitude"]== undefined || (response1.result[x]["timestamp"]===response1.result[x+1]["timestamp"])) {
+                // || (response1.result[x]["timestamp"]==response1.result[x+1]["timestamp"])
                 arr[x]=x
                 //console.log(arr[x]) // print out index
             }
