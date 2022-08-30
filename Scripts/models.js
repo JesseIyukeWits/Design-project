@@ -186,7 +186,7 @@ async function KM() {
     let totaldis=displacement.reduce((partialSumd, d) => partialSumd + d, 0) //in m
     let totalEnergyConsumption=(totalEnergy/((totaldis)/1000)) // in kwh/km
   
-    // console.log(totalEnergyConsumption)
+    console.log(totalEnergyConsumption, ' - total energy ')
    
   // arrays needed to be sent to database:
   const enddate = date.length
