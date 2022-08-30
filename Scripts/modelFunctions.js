@@ -1,10 +1,31 @@
 // Connect flespi to here
+const fetch = require('node-fetch')
 
 
+
+ async function flespi(){
+    let deviceID=4608732 //call device ID
+    
+    let headers = {
+        'Authorization': 'FlespiToken Yb2CKVPXSsD0KX57BBcYYggnxgKl9T4VUWosF1gnjHcSu5PVwPIjUMuhS4rSNlDv'
+    }
+    let flespiData
+    await fetch(`https://flespi.io/gw/devices/${deviceID}/messages`, {headers: headers}).then(data=>{
+        return data.json()
+    }).then(data=>{
+        flespiData = data
+    })
+
+    //console.log(flespiData)
+    return flespiData
+}
+ 
 //Model functions
-async function timeStamp() {
+async function timeStamp(){
     try{
-        let response1 = await require("./response1.json") // returns as json object(key-value pair)
+        
+        let response1 = await flespi() // returns as json object(key-value pair)
+        ///let response1 = await require(flespi) // returns as json object(key-value pair)
         let timeArr=[]
         timeArr= response1.result.map((user) => user.timestamp) // convert to an array
         //console.log(timeArr) 
@@ -26,9 +47,10 @@ async function timeStamp() {
   }
 
 
-  async function altitude() {
+  async function altitude(){
     try{
-        let response1 = await require("./response1.json") // returns as json object(key-value pair)
+        let response1 = await flespi()
+        //let response1 = await require("./response1.json") // returns as json object(key-value pair)
         let altitudeArr=[]
         altitudeArr= response1.result.map((user) => user["position.altitude"]) // convert to an array
 
@@ -47,9 +69,11 @@ async function timeStamp() {
     }
   }
 
-  async function latitude() {
+  async function latitude(){
     try{
-        let response1 = await require("./response1.json") // returns as json object(key-value pair)
+        
+        let response1 = await flespi() // returns as json object(key-value pair)
+        //let response1 = await require("./response1.json") // returns as json object(key-value pair)
         let latitudeArr=[]
         latitudeArr= response1.result.map((user) => user["position.latitude"]) // convert to an array
 
@@ -61,14 +85,15 @@ async function timeStamp() {
         //console.log(latitudeArr.length) 
         return latitudeArr
    
-    }catch(e) {
+    }catch(e){
         return -1
     }
   }
 
   async function longitude(){
     try{
-        let response1 = await require("./response1.json") // returns as json object(key-value pair)np
+        let response1 = await flespi() // returns as json object(key-value pair)
+        //let response1 = await require("./response1.json") // returns as json object(key-value pair)np
         let longitudeArr=[]
         longitudeArr= response1.result.map((user) => user["position.longitude"]) // convert to an array
 
@@ -89,7 +114,8 @@ async function timeStamp() {
 
   async function speed(){
     try{
-        let response1 = await require("./response1.json") // returns as json object(key-value pair)
+        let response1 = await flespi() // returns as json object(key-value pair)
+        //let response1 = await require("./response1.json") // returns as json object(key-value pair)
         let speedArr=[]
         speedArr= response1.result.map((user) => user["position.speed"]) // convert to an array
 
@@ -109,7 +135,8 @@ async function timeStamp() {
 
   async function ID(){
     try{
-        let response1 = await require("./response1.json") // returns as json object(key-value pair)np
+        let response1 = await flespi() // returns as json object(key-value pair)
+        //let response1 = await require("./response1.json") // returns as json object(key-value pair)np
         let IDArr=[]
         IDArr= response1.result.map((user) => user["channel.id"]) // convert to an array
        // console.log(IDArr)
@@ -125,8 +152,9 @@ async function timeStamp() {
 function checkKeys(){
 
     let arr= []
-        let response1 = require("./response1.json") // returns as json object(key-value pair)
+        //let response1 = require("./response1.json") // returns as json object(key-value pair)
         //console.log(response1.result.length)
+        let response1 = flespi() // returns as json object(key-value pair)
         for(let x=0; x<response1.result.length-1; x++){
             if(response1.result[x]["position.latitude"]== undefined || response1.result[x]["position.longitude"]== undefined || (response1.result[x]["timestamp"]===response1.result[x+1]["timestamp"])) {
                 // || (response1.result[x]["timestamp"]==response1.result[x+1]["timestamp"])
@@ -134,6 +162,9 @@ function checkKeys(){
                 //console.log(arr[x]) // print out index
             }
             //console.log(arr)
+            /* else{
+                return
+            } */
         }
 
         //remove undefined values
@@ -149,5 +180,7 @@ function checkKeys(){
 
  module.exports={timeStamp, altitude, latitude, longitude,speed, ID}
 
- //timeStamp()
+ //flespi(4608732) //call device ID
+
+// altitude()
 
