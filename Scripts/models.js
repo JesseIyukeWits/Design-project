@@ -83,6 +83,11 @@ async function KM() {
         {
             dt[x]=1
         }
+
+        if(dt[0] != 1)
+        {
+            dt[0]=1
+        }
         
         // Change in velocity between each timestep
         dv[x]= (velocity[x+1]-(velocity[x]))
@@ -186,7 +191,7 @@ async function KM() {
     let totaldis=displacement.reduce((partialSumd, d) => partialSumd + d, 0) //in m
     let totalEnergyConsumption=(totalEnergy/((totaldis)/1000)) // in kwh/km
   
-    // console.log(totalEnergyConsumption)
+    console.log(totalEnergyConsumption)
    
   // arrays needed to be sent to database:
   const enddate = date.length
