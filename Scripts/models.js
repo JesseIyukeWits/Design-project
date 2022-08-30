@@ -59,12 +59,12 @@ async function KM() {
     //length of Array- should be the same for other arrays
     lenArr= rawAltitude.length-1
     //console.log(lenArr)
-
+    date = unixtoLocal(rawTime)
    //  Set up array for energy consumption estimations
     for(let x=0; x<lenArr; x++){
         
         //unix to local time
-        date[x]= unixtoLocal(rawTime)
+       // date[x]= unixtoLocal(rawTime)
 
         // Calculate time between samples
         dt.push(rawTime[x+1]-rawTime[x])
@@ -178,16 +178,21 @@ async function KM() {
     // console.log(totalEnergyConsumption)
    
   // arrays needed to be sent to database:
-
+  const enddate = date.length
+  console.log(enddate)
   VehicleSchema.findOne({ ChannelId: channelID })
     .then(device => {
       if (device) {
         const EnergyInfo = new EnergyModel ({
           rawspeed: rawSpeed,
-          Displacement: totaldis,
+          Displacement: displacement,
           energyConsumption: totalEnergyConsumption,
-          ChannelId: channelID
-          // Date: date
+          ChannelId: channelID,
+          totaldisplacement: totaldis,
+          travelstart: date[0],
+          travelend: date[enddate - 1],
+          Date: date
+        
         })
 
         EnergyInfo.save()

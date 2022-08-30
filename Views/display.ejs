@@ -4,9 +4,12 @@
 <ul>
     <% jjj.forEach(function(jj){ %>
         <li>
-            <h3> Displacement values = <%= jj.Displacement %><h3>
-            <h3> Energy Consumption values = <%= jj.energyConsumption %><h3></h3>
-            <h3> Speed values = <%= jj.rawspeed %><h3></h3>
+            <h5> Travel date and time: </h5>
+            <h6> Travel start time = <%= jj.travelstart %></h6>
+            <h6> Travel end time = <%= jj.travelend %></h6>
+            <h5> Total Energy Consumption and Displacement for travel date and time: </h5>
+            <h6> Displacement value total = <%= jj.totaldisplacement %></h6>
+            <h6> Energy Consumption total = <%= jj.energyConsumption %></h6>       
 
         </li>
         <% }); %>
@@ -15,5 +18,6 @@
 <style>
     body {
         background-color: antiquewhite;
+        font-style:normal;
     }
 </style>
