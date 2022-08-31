@@ -1,5 +1,15 @@
 <title>Energy Value </title>
 
+<ul>
+    <% vehicle.forEach(function(i){ %>
+        <li>
+            <h5> Vehicle Model: </h5>
+            <h6> Vehicle Model = <%= i.VehicleModel %></h6>
+            <h6> Vehicle Year Model = <%= i.ModelYear %></h6>  
+
+        </li>
+        <% }); %>
+</ul>
 
 <ul>
     <% jjj.forEach(function(jj){ %>

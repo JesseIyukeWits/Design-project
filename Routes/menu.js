@@ -52,9 +52,17 @@ router.post('/view', (req, res) => {
           if (err) {
             console.log(err)
           } else {
-            res.render('display', { jjj: val })
+            // res.render('display', { jjj: val })
+            VehicleSchema.find({ ChannelId: channelID }, function (err, valV) {
+              if (err) {
+                console.log(err)
+              } else {
+                res.render('display', { vehicle: valV, jjj: val })
+              }
+            })
           }
         })
+        // find the vehicle schema too
       } else {
         res.send('Channel ID is incorrect or does not exist')
       }
