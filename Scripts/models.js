@@ -42,6 +42,10 @@ async function KM() {
     let ErP=[], ErB=[], ErO=[], energy=[], energyCosnumtpion=[], prop_brake_force=[],kinetic_power=[],propultion_work=[]
     let exp_speed_delta=[], unexp_speed_delta=[], aveSpeed= []
 
+    // fuel parameters
+    let fuelType='Gas'
+    let fuelConsume=[]
+
     // Functions
     let rawTime= await database.timeStamp()
     let rawAltitude = await database.altitude()
@@ -49,16 +53,20 @@ async function KM() {
     let rawLongitude = await database.longitude()
     let rawSpeed = await database.speed()
     let ID= await database.ID()
+    let rawMAF= await database.MAF()
 
     // Convert speed in km/h to m/s , look up max speeds for certain Vehicles
     velocity= rawVelocity(rawSpeed)
-    
 
+    //number of removed samples due to data collection error
+    let removeSample= await database.removedSamples()
+
+    //fuel consumption model
+    fuelConsume= fuel(rawMAF,rawSpeed,fuelType)
+    
     //channel ID from flespi
     let channelID= ID[0]
     
-
-
     //length of Array- should be the same for other arrays
     lenArr= rawAltitude.length-1
 
@@ -66,7 +74,7 @@ async function KM() {
     date = unixtoLocal(rawTime)
 
     
-    //avergae speed
+    //average speed
     let totalSpeed = rawSpeed.reduce((partialSum, a) => partialSum + a, 0) 
     aveSpeed= totalSpeed/rawSpeed.length
 
@@ -74,20 +82,8 @@ async function KM() {
    //  Set up array for energy consumption estimations
     for(let x=0; x<lenArr; x++){
         
-        //unix to local time
-       // date[x]= unixtoLocal(rawTime)
-
         // Calculate time between samples
         dt.push(rawTime[x+1]-rawTime[x])
-        if(dt[x]==0)
-        {
-            dt[x]=1
-        }
-
-        if(dt[0] != 1)
-        {
-            dt[0]=1
-        }
         
         // Change in velocity between each timestep
         dv[x]= (velocity[x+1]-(velocity[x]))
@@ -190,6 +186,23 @@ async function KM() {
     let totalEnergy = energy.reduce((partialSum, a) => partialSum + a, 0) //in kwh
     let totaldis=displacement.reduce((partialSumd, d) => partialSumd + d, 0) //in m
     let totalEnergyConsumption=(totalEnergy/((totaldis)/1000)) // in kwh/km
+
+    //Fuel behaviour
+    let totalFuelConsumption= fuelConsume.reduce((partialSum, a) => partialSum + a, 0) // in litres/km
+
+    if(totalFuelConsumption<0.5)
+    {
+        Behaviour='Quiet' 
+    }
+    if(totalFuelConsumption >= 0.05 && totalFuelConsumption<0.1)
+    {
+        Behaviour='Normal'
+    }
+
+    if(totalFuelConsumption>=0.1)
+    {
+        Behaviour='Aggresive' 
+    }
   
 
     console.log(totalEnergyConsumption, ' - total energy ')
@@ -281,6 +294,38 @@ function rawVelocity(speed){
     }
     return velocityarr  
 
+}
+
+function fuel(maf,speed,type){
+
+    let fuelConsumption=[]
+    let Afr=0
+    let fd=0
+    let flow=0
+
+    if(type == 'Gas'){ 
+        Afr = 14.7
+        fd=820 //grams/dm^3
+     }
+     if(type=='diesel'){ 
+       Afr=14.5
+       fd= 750 // grams/dm^3
+
+       }
+    for(let x=0;x<=maf.length;x++)
+    {
+        if(speed[x]>0.5){
+
+            flow=((maf[x]*3600)/100)/(Afr*fd) // litres/hr
+            fuelConsumption[x]=(flow/speed[x]) //litres/km
+
+        }
+        else{
+            fuelConsumption[x]=0
+        }
+
+    }
+    return fuelConsumption
 }
 
 
