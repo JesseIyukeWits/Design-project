@@ -7,7 +7,7 @@ const fetch = require('node-fetch')
     let deviceID=4608732 //call device ID
     
     let headers = {
-        'Authorization': 'FlespiToken Yb2CKVPXSsD0KX57BBcYYggnxgKl9T4VUWosF1gnjHcSu5PVwPIjUMuhS4rSNlDv'
+        'Authorization': 'FlespiToken i1nYheeHfKDbCyp225Se9bAN52CnW2i4RuQXyVuBtXDUkQMcJseItCmmuMzgEG8k'
     }
     let flespiData
     await fetch(`https://flespi.io/gw/devices/${deviceID}/messages`, {headers: headers}).then(data=>{
