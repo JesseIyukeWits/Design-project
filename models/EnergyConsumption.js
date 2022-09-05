@@ -10,6 +10,8 @@ const EnergyConsumptionSchema = new mongoose.Schema({
   travelstart: { type: String, required: true },
   travelend: { type: String, required: true },
   averageSpeed: { type: String, required: true },
+  fuelConsumption: { type: String, required: true },
+  behaviour: { type: String, required: true },
   Date: [{ type: String, required: true }]
 
 })

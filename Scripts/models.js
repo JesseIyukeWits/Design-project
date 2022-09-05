@@ -201,15 +201,15 @@ async function KM() {
 
     if(totalFuelConsumption>=0.1)
     {
-        Behaviour='Aggresive' 
+        Behaviour='Aggressive' 
     }
   
 
     console.log(totalEnergyConsumption, ' - total energy ')
 
-    //console.log(totalEnergyConsumption)
+    console.log(totalFuelConsumption, '=-----fuel consumption ----')
 
-   
+    console.log(Behaviour, '---behaviour--')
   // arrays needed to be sent to database:
   const enddate = date.length
   console.log(enddate)
@@ -225,6 +225,8 @@ async function KM() {
           travelstart: date[0],
           travelend: date[enddate - 1],
           averageSpeed: aveSpeed,
+          fuelConsumption: totalFuelConsumption,
+          behaviour: Behaviour,
           Date: date
         
         })
