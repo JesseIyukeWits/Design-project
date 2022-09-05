@@ -64,8 +64,8 @@ async function KM() {
     //fuel consumption model
     fuelConsume= fuel(rawMAF,rawSpeed,fuelType)
     
-    //channel ID from flespi
-    let channelID= ID[0]
+    //device ID from flespi
+    let deviceID= ID[0]
     
     //length of Array- should be the same for other arrays
     lenArr= rawAltitude.length-1
