@@ -203,8 +203,8 @@ async function KM() {
     {
         Behaviour='Aggressive' 
     }
-  
-
+    
+    console.log(deviceID)
     console.log(totalEnergyConsumption, ' - total energy ')
 
     console.log(totalFuelConsumption, '=-----fuel consumption ----')
@@ -213,20 +213,21 @@ async function KM() {
   // arrays needed to be sent to database:
   const enddate = date.length
   console.log(enddate)
-  VehicleSchema.findOne({ ChannelId: channelID })
+  VehicleSchema.findOne({ DeviceId: deviceID })
     .then(device => {
       if (device) {
         const EnergyInfo = new EnergyModel ({
           rawspeed: rawSpeed,
           Displacement: displacement,
           energyConsumption: totalEnergyConsumption,
-          ChannelId: channelID,
+          // ChannelId: channelID,
           totaldisplacement: totaldis,
           travelstart: date[0],
           travelend: date[enddate - 1],
           averageSpeed: aveSpeed,
           fuelConsumption: totalFuelConsumption,
           behaviour: Behaviour,
+          DeviceID: deviceID,
           Date: date
         
         })

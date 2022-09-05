@@ -6,7 +6,7 @@ const DeviceSchema = new mongoose.Schema({
   sensor: { type: String, required: true },
   VehicleModel: { type: String, required: true },
   ModelYear: { type: String, required: true },
-  ChannelId: { type: String, required: true },
+  DeviceId: { type: String, required: true },
   date: { type: Date, default: Date.now }
 
 })

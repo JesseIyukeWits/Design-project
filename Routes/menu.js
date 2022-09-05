@@ -12,13 +12,13 @@ router.get('/display', (req, res) => res.render('display'))
 
 // function to handle logging a device.
 router.post('/log', (req, res) => {
-  const { username, sensor, Vehicle, Year, ChannelId } = req.body
-  console.log(username, sensor, Vehicle, Year, ChannelId)
+  const { username, sensor, Vehicle, Year, Deviceid } = req.body
+  console.log(username, sensor, Vehicle, Year, Deviceid)
   user_.findOne({ email: username })
     .then(user => {
       if (user) {
         const VehicleDetails = new VehicleSchema ({
-          username: username, sensor: sensor, VehicleModel: Vehicle, ModelYear: Year, ChannelId: ChannelId
+          username: username, sensor: sensor, VehicleModel: Vehicle, ModelYear: Year, DeviceId: Deviceid
         })
 
         VehicleDetails.save()
@@ -27,7 +27,7 @@ router.post('/log', (req, res) => {
             console.log('Device logged')
           })
           .catch(err => console.log(err))
-        user.updateOne({ $push: { ChannelId: ChannelId } })
+        // user.updateOne({ $push: { ChannelId: ChannelId } })
       }
       else {
         res.send('Your username does not exist')
@@ -41,19 +41,19 @@ on the display.ejs page.
 */
 
 router.post('/view', (req, res) => {
-  const { channelID } = req.body
-  console.log(channelID)
+  const { deviceID } = req.body
+  console.log(deviceID)
   // const arr = []
-  VehicleSchema.findOne({ ChannelId: channelID })
+  VehicleSchema.findOne({ DeviceId: deviceID })
     .then(device => {
       if (device) {
         // res.render('display', { EnergyConsumption: device.energyConsumption })
-        EnergyInfo.find({ ChannelId: channelID }, function (err, val) {
+        EnergyInfo.find({ DeviceID: deviceID }, function (err, val) {
           if (err) {
             console.log(err)
           } else {
             // res.render('display', { jjj: val })
-            VehicleSchema.find({ ChannelId: channelID }, function (err, valV) {
+            VehicleSchema.find({ DeviceId: deviceID }, function (err, valV) {
               if (err) {
                 console.log(err)
               } else {
@@ -64,7 +64,7 @@ router.post('/view', (req, res) => {
         })
         // find the vehicle schema too
       } else {
-        res.send('Channel ID is incorrect or does not exist')
+        res.send('Device ID is incorrect or does not exist')
       }
     })
     .catch(err => console.log(err))
