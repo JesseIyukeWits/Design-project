@@ -139,7 +139,7 @@ async function timeStamp(){
         //let response1 = await flespi() // returns as json object(key-value pair)
         let response1 = await require("./response1.json") // returns as json object(key-value pair)np
         let IDArr=[]
-        IDArr= response1.result.map((user) => user["channel.id"]) // convert to an array
+        IDArr= response1.result.map((user) => user["device.id"]) // convert to an array
 
         let arr= checkKeys()
         for(let y=arr.length-1;y>=0;y--)
