@@ -1,0 +1,3 @@
+[submodule "WebApp"]
+	path = WebApp
+	url = git@github.com:KevyBaby/Design-project-frontend.git
