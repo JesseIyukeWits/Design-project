@@ -10,7 +10,7 @@ Ensure the following libaries are installed before running models.js:
 For testing purposes, response1.json dataset file is used instead of live fetch from Flespi
 
 -----------------------------------------------------------------------------------------
-Ensure the following libaries are installed before running app.js:
+Ensure the following dependencies are installed before running app.js:
 
 - nodemon
 - npm 
@@ -29,4 +29,5 @@ Command to run app.js:
 
 npm run dev
 
+After running app.js open localhost:5000
 ------------------------------------------------------------------------------------------
