@@ -29,5 +29,9 @@ Command to run app.js:
 
 npm run dev
 
-After running app.js open localhost:5000
+------------------------------------------------------------------------------------------
+After running app.js open localhost:5000 
+
+- The default email/username: JK@gmail.com
+- The default password: 12345678
 ------------------------------------------------------------------------------------------
