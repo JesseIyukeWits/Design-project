@@ -11,7 +11,22 @@ For testing purposes, response1.json dataset file is used instead of live fetch 
 
 -----------------------------------------------------------------------------------------
 Ensure the following libaries are installed before running app.js:
-- nodemon
 
+- nodemon
+- npm 
+- express-handlebars
+- passport 
+- passport-local
+- bycryptjs
+- express
+- express-ejs-layouts
+- express-session
+- mongoose 
+- connect-flash
+
+------------------------------------------------------------------------------------------
+Command to run app.js:
+
+npm run dev
 
 ------------------------------------------------------------------------------------------
