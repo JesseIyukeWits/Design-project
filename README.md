@@ -34,4 +34,6 @@ After running app.js open localhost:5000
 
 - The default email/username: JK@gmail.com
 - The default password: 12345678
+- The default device ID: 4608732
+
 ------------------------------------------------------------------------------------------
